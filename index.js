@@ -1,7 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const homeRoutes = require('./routes/HomeRoute');
+
 const app = express();
+
+app.use(homeRoutes);
 
 const PORT = 3001;
 
