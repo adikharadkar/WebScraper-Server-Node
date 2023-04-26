@@ -3,10 +3,9 @@ const router = express.Router();
 
 // Import Error Handler
 const HttpError = require('../models/http-error');
+const HomeController = require('../controllers/HomeController');
 
-router.get('/', (req, res, next) => {
-    res.status(200).send('Successful!')
-})
+router.get('/', HomeController.getHomePage);
 
 // Demo to throw an error if any
 /*
