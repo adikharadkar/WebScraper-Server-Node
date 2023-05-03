@@ -6,6 +6,7 @@ const HttpError = require('../models/http-error');
 const HomeController = require('../controllers/HomeController');
 
 router.get('/', HomeController.getHomePage);
+router.post('/', HomeController.searchJob);
 
 // Demo to throw an error if any
 /*
