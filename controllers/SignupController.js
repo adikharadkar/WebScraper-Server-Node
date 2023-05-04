@@ -6,7 +6,7 @@ const postSignupData = (req, res, next) => {
         email,
         password
     }
-    console.log(req.body.username);
+    console.log(userData);
     res.status(201).json(userData);
 }
 
