@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const mongoose = require('mongoose');
 
 const homeRoutes = require('./routes/HomeRoute');
 const signupRoutes = require('./routes/SingupRoute');
@@ -17,6 +18,18 @@ app.use(loginRoutes);
 
 const PORT = 3001;
 
-app.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}`);
-});
+// Connection to the database
+mongoose.connect(
+    'mongodb+srv://adityakharadkar27:'
+     + encodeURIComponent('Admin@2706')
+      + '@cluster0.ooxgay7.mongodb.net/webScraper?retryWrites=true&w=majority', {
+        useNewUrlParser: true,
+      })
+    .then(() => {
+        app.listen(PORT, () => {
+            console.log(`Server listening on port ${PORT}`);
+        });
+    })
+    .catch(err => {
+        console.log(err);
+    })
