@@ -5,6 +5,31 @@ const crypto = require('crypto');
 const postSignupData = async (req, res, next) => {
     const {username, email, password} = req.body;
 
+    // Check if the user already has an account or not
+    let existingUser;
+
+    // If findOne() method fails, then error will be returned from catch block
+    try {
+        existingUser = await User.findOne({email: email});
+    } catch (err) {
+        const error = new HttpError(
+            'Signing up failed! Please try again later.',
+            500
+        )
+        res.status(500);
+        return next(error);
+    }
+    
+    // If user exists, then return an error with status code 422
+    if (existingUser) {
+        const error = new HttpError(
+            'User exists already! Please login instead or change the email address.',
+            422
+        )
+        res.status(422);
+        return next(error);
+    }
+
     // Generating a random salt of 16 bytes
     const salt = crypto.randomBytes(16).toString('hex');
 
@@ -27,6 +52,7 @@ const postSignupData = async (req, res, next) => {
             'User registration failed, please try again!',
             500
         );
+        res.status(500);
         return next(err);
     }
     
