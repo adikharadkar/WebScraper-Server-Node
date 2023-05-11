@@ -16,30 +16,27 @@ const postLoginData = async (req, res, next) => {
         return next(error);
     }
 
-    // Generating a random salt of 16 bytes
-    const salt = crypto.randomBytes(16).toString('hex');
-
-    // Creating a hash of a password
-    const hash = crypto.createHmac('sha256', salt)
-                        .update(password)
-                        .digest('hex');
-
-    User.findOne({email: email}).then(user => {
-        if (user) {
-            res.status(200).send(user["salt"])
-            return
-        } else {
-            res.send("Error")
-            return
-        }
-    })
+    try {
+        let salt = existingUser.salt;
+        let userPassword = existingUser.password;
+        // Creating a hash of a password
+        const hash = crypto.createHmac('sha256', salt)
+                            .update(password)
+                            .digest('hex');
+        console.log("Login Successful!")
+        res.status(201).send("Log in Successful");
+    } catch(err) {
+        const error = new HttpError(
+            'Incorrect password',
+            500
+        )
+        return next(error)
+    }
 
     const loginData = {
         email,
         password
     }
-    
-    res.status(201).json(loginData);
 }
 
 exports.postLoginData = postLoginData;
