@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const HttpError = require('../models/http-error');
 const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 
 const postSignupData = async (req, res, next) => {
     const {username, email, password} = req.body;
@@ -53,10 +54,28 @@ const postSignupData = async (req, res, next) => {
             500
         );
         res.status(500);
-        return next(err);
+        return next(error);
+    }
+
+    let token;
+    try {
+        token = jwt.sign(
+            { 
+                userId: userData._id,
+                email: userData.email 
+            }, 
+            'supersecret_dont_share', 
+            { expiresIn: '1h' }
+        );
+    } catch (err) {
+        const error = new HttpError(
+            'User registration failed, please try again!',
+            500
+        )
+        return next(error);
     }
     
-    res.status(201).json(userData);
+    res.status(201).json({ userId: userData._id,  email: userData.email, token: token });
 }
 
 exports.postSignupData = postSignupData;
