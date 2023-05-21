@@ -5,17 +5,20 @@ const jwt = require('jsonwebtoken');
 
 const postLoginData = async (req, res, next) => {
     const {email, password} = req.body;
+    console.log(req.body)
 
     let existingUser;
     try {
 
         // Check if the user exists for the below email id or not
         existingUser = await User.findOne({email: email})
+        console.log(existingUser)
     } catch (err) {
         const error = new HttpError(
             'Logging in failed, please try again later',
             500
         )
+        console.log('problem')
         return next(error);
     }
 
